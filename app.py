@@ -36,10 +36,16 @@ def login_done():
 def signin():
     return render_template("signin.html")
 
-@app.route("/signin_done")   #실제로 보이는 부분x      
+@app.route("/signin_done", methods = ["get"])   #실제로 보이는 부분x      
 def signin_done():
-    pass
-
+    email = request.args.get("email")
+    name = request.args.get("name")
+    uid = request.args.get("id")
+    pwd = request.args.get("pwd")
+    if DB.signin(uid,pwd,email,name):
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("signin"))
 @app.route("/user/<uid>")       #각 회원의 개인정보
 def user(uid):
     pass
