@@ -1,12 +1,17 @@
-from flask import Flask, redirect, render_template, url_for, request
+from flask import Flask, redirect, render_template, url_for, request, flash, session
 from DB_handler import DBmodule
 
 app = Flask(__name__)
+app.secret_key = "dasggasdgasd"
 DB=DBmodule()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if "uid" in session:
+        user = session["uid"]
+    else:
+        user = "login"
+    return render_template("index.html", user = user)
 
 @app.route("/list")         #게시글 목록
 def post_list():
@@ -26,11 +31,28 @@ def write_done():
 
 @app.route("/login")           #로그인
 def login():
-    pass
+    if "uid" in session:
+        return redirect(url_for("index"))
+    return render_template("login.html")
 
-@app.route("/login_done")      #실제로 보이는 부분x
+@app.route("/logout")           #로그인
+def logout():
+    if "uid" in session:
+        session.pop("uid")
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
+
+@app.route("/login_done", methods = ["GET"])      #실제로 보이는 부분x
 def login_done():
-    pass
+    uid = request.args.get("id")
+    pwd = request.args.get("pwd")
+    if DB.login(uid,pwd):
+        session["uid"] = uid
+        return redirect(url_for("index"))
+    else:
+        flash("아이디가 없거나 비밀번호가 틀립니다")
+        return redirect(url_for("login"))
 
 @app.route("/signin")          #회원가입
 def signin():
@@ -45,6 +67,7 @@ def signin_done():
     if DB.signin(uid,pwd,email,name):
         return redirect(url_for("index"))
     else:
+        flash("이미 존재하는 아이디입니다.")
         return redirect(url_for("signin"))
 @app.route("/user/<uid>")       #각 회원의 개인정보
 def user(uid):

@@ -2,6 +2,12 @@
 
 {% block user %}
 
+{% if user=="login" %}
+<a href = "{{url_for('login')}}">login</a>
+{% else %}
+<p>user : {{user}}</p>
+<a href = "{{url_for('logout')}}">logout</a>
+{% endif %}
 {% endblock user %}
 
 {% block contents %}
