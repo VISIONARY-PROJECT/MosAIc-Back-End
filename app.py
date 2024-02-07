@@ -15,19 +15,32 @@ def index():
 
 @app.route("/list")         #게시글 목록
 def post_list():
-    pass
+    post_list = DB.post_list()
+    if post_list == None:
+        length = 0
+    else:
+        length = len(post_list)
+    return render_template("post_list.html", post_list = post_list.items(), length = length)
 
-@app.route("/post/<int:pid>")         #목록 내의 각 포스트의 세부내용
+@app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용
 def post(pid):
-    pass
+    post = DB.post_detail(pid)
+    return render_template("post_detail.html", post = post)
 
 @app.route("/write")            #게시글 작성
 def write():
-    pass
+    if "uid" in session:
+        return render_template("write_post.html")
+    else:
+        return redirect(url_for("login")) 
 
-@app.route("/write_done", methods = ["GET"])    #작성한 게시글을 get으로 받고 입력완료 페이지
+@app.route("/write_done", methods = ["get"])    #작성한 게시글을 get으로 받고 입력완료 페이지
 def write_done():
-    pass 
+    title = request.args.get("title")
+    contents = request.args.get("contents")
+    uid = session.get("uid")
+    DB.write_post(title, contents, uid)
+    return redirect(url_for("index"))
 
 @app.route("/login")           #로그인
 def login():
@@ -69,9 +82,15 @@ def signin_done():
     else:
         flash("이미 존재하는 아이디입니다.")
         return redirect(url_for("signin"))
-@app.route("/user/<uid>")       #각 회원의 개인정보
-def user(uid):
-    pass
+    
+@app.route("/users_post/<string:uid>")       
+def users_post(uid):
+    u_post = DB.get_user(uid)
+    if u_post == None:
+        length = 0
+    else:
+        length = len(u_post)
+    return render_template("user_detail.html", post_list = u_post, length = length, uid = uid)
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0" , debug = True)

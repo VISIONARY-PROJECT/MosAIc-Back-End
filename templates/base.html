@@ -6,11 +6,11 @@
     <title>Flask_World</title>
 </head>
 <body>
-    <header>
-        {% block message %}
+    {% block message %}
 
-        {% endblock message %}
-        <p>Flask_World</p>
+    {% endblock message %}
+    <header>
+        <a href="{{url_for('index')}}"><p>Flask_World</p></a>
         {% block user %}  
 
         {% endblock user %}  
