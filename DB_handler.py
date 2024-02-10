@@ -9,6 +9,7 @@ class DBmodule:
 
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database()
+        self.storage = firebase.storage()
 
     def login(self, uid, pwd):
         users = self.db.child("users").get().val()
@@ -49,6 +50,17 @@ class DBmodule:
             "uid":uid
         }
         self.db.child("posts").child(pid).set(information)
+
+    def upload_photo(self, photo_url, userid):
+        spid = str(uuid.uuid4())[:12]
+        self.storage.child("images/{}.jpg" .format(spid)).put(photo_url, userid)
+        ad = {"photo" : "images/{}.jpg" .format(spid)}
+        users_post =self.db.child("posts").get().val()
+        for post in users_post.items():
+            print(post[0])
+            if post[1]["uid"]==userid:
+                self.db.child("posts").child(post[0]).update(ad)
+
     
     def post_list(self):
         post_lists = self.db.child("posts").get().val()
@@ -66,3 +78,7 @@ class DBmodule:
                 post_list.append(post)
 
         return post_list
+    
+    def get_photo_url(self, purl, uid):
+        print(self.storage.child(purl).get_url(uid))
+        return self.storage.child(purl).get_url(uid)

@@ -26,7 +26,8 @@ def post_list():
 @app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용
 def post(pid):
     post = DB.post_detail(pid)
-    return render_template("post_detail.html", post = post)
+    photourl = DB.get_photo_url(post["photo"],session["uid"])
+    return render_template("post_detail.html", post = post, photourl = photourl)
 
 @app.route("/write")            #게시글 작성
 def write():
@@ -49,6 +50,7 @@ def photoupload_done():
     uid = session.get("uid")
     photoid = str(uuid.uuid4())[:12]
     f.save("static/img/{}.jpeg".format(photoid))
+    DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)
     return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(photoid))
 
 @app.route("/login")           #로그인
