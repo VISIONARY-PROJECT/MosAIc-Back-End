@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, url_for, request, flash, session
 from DB_handler import DBmodule
+import uuid
 
 app = Flask(__name__)
 app.secret_key = "dasggasdgasd"
@@ -40,7 +41,15 @@ def write_done():
     contents = request.args.get("contents")
     uid = session.get("uid")
     DB.write_post(title, contents, uid)
-    return redirect(url_for("index"))
+    return render_template("applyphoto.html")
+
+@app.route("/photoupload_done", methods = ["post"])    #작성한 게시글을 get으로 받고 입력완료 페이지
+def photoupload_done():
+    f = request.files["file"]
+    uid = session.get("uid")
+    photoid = str(uuid.uuid4())[:12]
+    f.save("static/img/{}.jpeg".format(photoid))
+    return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(photoid))
 
 @app.route("/login")           #로그인
 def login():
