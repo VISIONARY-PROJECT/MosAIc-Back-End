@@ -72,12 +72,13 @@ class DBmodule:
     def get_user(self, uid):
         post_list =[]
         users_post =self.db.child("posts").get().val()
-        for post in users_post.items():
-            if post[1]["uid"]==uid:
-                post_list.append(post)
-
-        return post_list
-    
+        try:
+            for post in users_post.items():
+                if post[1]["uid"]==uid:
+                    post_list.append(post)
+            return post_list
+        except:
+            return post_list
     def get_photo_url(self, purl, uid):
         print(self.storage.child(purl).get_url(uid))
         return self.storage.child(purl).get_url(uid)
