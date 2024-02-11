@@ -2,6 +2,11 @@
 
 {% block contents %}
 <h2>{{uid}}가 등록한 사진입니다.</h2>
+{% if detect == False %}
+    <p>얼굴이 인식되지 않았습니다.</p>
+{% else %}
+    <p>얼굴이 인식되었습니다.</p>
+{% endif %}
 <p><div>
     <img src = "{{url_for('static', filename = img)}}" width = 450>
 </div></p>   

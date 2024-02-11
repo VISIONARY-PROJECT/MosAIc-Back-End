@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template, url_for, request, flash, session
 from DB_handler import DBmodule
 import uuid
+import face_model
 
 app = Flask(__name__)
 app.secret_key = "dasggasdgasd"
@@ -50,8 +51,13 @@ def photoupload_done():
     uid = session.get("uid")
     photoid = str(uuid.uuid4())[:12]
     f.save("static/img/{}.jpeg".format(photoid))
-    DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)
-    return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(photoid))
+    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
+    if Dimage == None:
+        DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)
+        return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(photoid), detect = False)
+    else: 
+        DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)
+        return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(Dimage), detect = True)
 
 @app.route("/login")           #로그인
 def login():

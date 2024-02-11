@@ -57,7 +57,6 @@ class DBmodule:
         ad = {"photo" : "images/{}.jpg" .format(spid)}
         users_post =self.db.child("posts").get().val()
         for post in users_post.items():
-            print(post[0])
             if post[1]["uid"]==userid:
                 self.db.child("posts").child(post[0]).update(ad)
 
