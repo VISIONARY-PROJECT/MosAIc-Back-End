@@ -16,7 +16,7 @@ def index():
         user = "login"
     return jsonify({"user" : user}) 
 
-@app.route("/api/login", methods = ["POST"])      #실제로 보이는 부분x
+@app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
 def login():
     users = request.get_json()
     uid = users['id']
@@ -27,13 +27,13 @@ def login():
     else:
         return jsonify(False)            #로그인 실패   ->다시 로그인 화면
     
-@app.route("/api/logout")           #로그아웃
+@app.route("/logout")           #로그아웃
 def logout():
     if "uid" in session:
         session.pop("uid")
         return         #로그인 화면으로 이동?
     
-@app.route("/api/signin", methods = ["POST"])   #회원가입 처리
+@app.route("/signin", methods = ["POST"])   #회원가입 처리
 def signin():
     users = request.get_json()
     uid = users['id']
@@ -44,18 +44,18 @@ def signin():
     else:
         return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
     
-@app.route("/api/upload", methods = ["POST"])    #사진 업로드
+@app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():
     file = request.get_json()
     f = file['url']
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))
-    return jsonify({"photo_url" : photoid})            #저장한 사진의 url을 프론트에 전달
+    return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
 
-@app.route("/invert", methods = ["GET"])
+@app.route("/invert", methods = ["POST"])
 def invert():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
-    photoid = id['photo_url']
+    photoid = id['photo_id']
     uid = session.get("uid")
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     if Dimage == None:                          #인식이 안된 경우 
