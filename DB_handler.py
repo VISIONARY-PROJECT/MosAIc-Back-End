@@ -29,10 +29,9 @@ class DBmodule:
                 return False
         return True    
 
-    def signin(self, id, pwd, email, name):
+    def signin(self, id, pwd, email):
         information={
             "pwd":pwd,
-            "uname":name,
             "email":email
         }
         if self.signin_verification(id):
