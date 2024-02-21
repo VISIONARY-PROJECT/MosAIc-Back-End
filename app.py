@@ -27,6 +27,12 @@ def login():
     else:
         return jsonify(False)            #로그인 실패   ->다시 로그인 화면
     
+@app.route("/api/logout")           #로그아웃
+def logout():
+    if "uid" in session:
+        session.pop("uid")
+        return         #로그인 화면으로 이동?
+    
 @app.route("/api/signin", methods = ["POST"])   #회원가입 처리
 def signin():
     users = request.get_json()
@@ -56,81 +62,22 @@ def invert():
         DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)   #안된 경우도 DB에 올려야할까? , 인식안된 경우 다시 업로드 페이지로?
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
     else: 
+        title = str(datetime.datetime.now())        #제목을 날짜로 저장
+        DB.write_post(title, uid)
         DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
+    
+@app.route("/users_list/<string:uid>")       #react로 어캐 받을지 고민
+def users_list(uid):
+    u_post = DB.get_user(uid)
+    return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
 
-@app.route("/list")         #게시글 목록
-def post_list():
-    post_list = DB.post_list()
-    if post_list == None:
-        length = 0
-    else:
-        length = len(post_list)
-    return render_template("post_list.html", post_list = post_list.items(), length = length)
-
-@app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용
+@app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용(post_list의 각 인덱스별 0번이 pid 이중배열)
 def post(pid):
     post = DB.post_detail(pid)
-    photourl = DB.get_photo_url(post["photo"],session["uid"])
-    return render_template("post_detail.html", post = post, photourl = photourl)
+    photourl = DB.get_photo_url(post["photo"],session["uid"])      #사진url을 받아오기
+    return jsonify({"post" : post, "imgsrc" : photourl})
 
-@app.route("/write")            #게시글 작성
-def write():
-    if "uid" in session:
-        return render_template("write_post.html")
-    else:
-        return redirect(url_for("login")) 
-
-@app.route("/write_done", methods = ["get"])    #작성한 게시글을 get으로 받고 입력완료 페이지
-def write_done():
-    title = request.args.get("title")
-    contents = request.args.get("contents")
-    uid = session.get("uid")
-    DB.write_post(title, contents, uid)
-    return render_template("applyphoto.html")
-
-@app.route("/photoupload_done", methods = ["post"])    #작성한 게시글을 get으로 받고 입력완료 페이지
-def photoupload_done():
-    f = request.files["file"]
-    uid = session.get("uid")
-    photoid = str(uuid.uuid4())[:12]
-    f.save("static/img/{}.jpeg".format(photoid))
-    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
-    if Dimage == None:
-        DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)
-        return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(photoid), detect = False)
-    else: 
-        DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)
-        return render_template("viewphoto.html", uid = uid, img="img/{}.jpeg".format(Dimage), detect = True)
-
-@app.route("/login")           #로그인
-def login():
-    if "uid" in session:
-        return redirect(url_for("index"))
-    return render_template("login.html")
-
-@app.route("/logout")           #로그인
-def logout():
-    if "uid" in session:
-        session.pop("uid")
-        return redirect(url_for("index"))
-    else:
-        return redirect(url_for("login"))
-
-
-
-@app.route("/signin")          #회원가입
-def signin():
-    return render_template("signin.html")
-    
-@app.route("/users_post/<string:uid>")       
-def users_post(uid):
-    u_post = DB.get_user(uid)
-    if u_post == None:
-        length = 0
-    else:
-        length = len(u_post)
-    return render_template("user_detail.html", post_list = u_post, length = length, uid = uid)
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0" , debug = True)

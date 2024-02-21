@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-
-{% block contents %}
-<h2>원하는 사진을 등록해주세요</h2>
-<p><form method="post" enctype="multipart/form-data" action="{{url_for('photoupload_done')}}">
-    <input type ="file" name="file"/><br>
-    <input type ="submit"/>
-</form></p>   
-{% endblock contents %}

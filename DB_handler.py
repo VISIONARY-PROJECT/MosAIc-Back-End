@@ -41,11 +41,10 @@ class DBmodule:
             return False
 
     
-    def write_post(self, title, contents, uid):
+    def write_post(self, title, uid):
         pid = str(uuid.uuid4())[:12]             #post의 아이디
         information ={
             "title":title,
-            "contents":contents,
             "uid":uid
         }
         self.db.child("posts").child(pid).set(information)
@@ -78,6 +77,7 @@ class DBmodule:
             return post_list
         except:
             return post_list
+        
     def get_photo_url(self, purl, uid):
         print(self.storage.child(purl).get_url(uid))
         return self.storage.child(purl).get_url(uid)
