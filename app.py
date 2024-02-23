@@ -3,8 +3,11 @@ from DB_handler import DBmodule
 import uuid
 import face_model
 import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+CORS(app,resource={r'*':{'origins':'*'}})
 app.secret_key = "dasggasdgasd"
 DB=DBmodule()
 
@@ -20,7 +23,8 @@ def index():
 def login():
     users = request.get_json()
     uid = users['id']
-    pwd = users['pwd']
+    pwd = users['pw']
+    print(uid,pwd)
     if DB.login(uid,pwd):
         session["uid"] = uid
         return jsonify(True)             #로그인 성공   ->업로드 화면
@@ -38,8 +42,10 @@ def signin():
     users = request.get_json()
     uid = users['id']
     pwd = users['pwd']
-    email = users['email']
-    if DB.signin(uid,pwd,email):
+    pwdcheck = users['pwdcheck']
+    if pwd != pwdcheck:
+        return jsonify("notpwd")    #회원가입시에 패스워드 일치 오류
+    if DB.signin(uid,pwd,pwdcheck):
         return jsonify(True)        #회원가입 성공 -> 로그인 화면
     else:
         return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)

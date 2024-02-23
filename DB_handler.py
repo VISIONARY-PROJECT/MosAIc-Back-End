@@ -29,10 +29,11 @@ class DBmodule:
                 return False
         return True    
 
-    def signin(self, id, pwd, email):
+    def signin(self, id, pwd, pwdcheck):
+        if pwd != pwdcheck:
+            return "notpwd"
         information={
-            "pwd":pwd,
-            "email":email
+            "pwd":pwd
         }
         if self.signin_verification(id):
             self.db.child("users").child(id).set(information)
