@@ -27,8 +27,12 @@ def login():
     print(uid,pwd)
     if DB.login(uid,pwd):
         session["uid"] = uid
+        print("True")
+        print(jsonify(True))
         return jsonify(True)             #로그인 성공   ->업로드 화면
     else:
+        print("False")
+        print(jsonify(False))
         return jsonify(False)            #로그인 실패   ->다시 로그인 화면
     
 @app.route("/logout")           #로그아웃
@@ -86,4 +90,4 @@ def post(pid):
 
 
 if __name__ == "__main__":
-    app.run(host = "0.0.0.0" , debug = True)
+    app.run(host = "0.0.0.0")
