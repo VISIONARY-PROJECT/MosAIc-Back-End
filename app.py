@@ -14,10 +14,9 @@ DB=DBmodule()
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
 def index():
     if "uid" in session:
-        user = session["uid"]
+        return jsonify(True)
     else:
-        user = "login"
-    return jsonify({"user" : user}) 
+        return jsonify(False)
 
 @app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
 def login():
@@ -39,7 +38,7 @@ def login():
 def logout():
     if "uid" in session:
         session.pop("uid")
-        return         #로그인 화면으로 이동?
+        return None         #홈 화면으로 이동?
     
 @app.route("/signin", methods = ["POST"])   #회원가입 처리
 def signin():
@@ -48,11 +47,11 @@ def signin():
     pwd = users['pwd']
     pwdcheck = users['pwdcheck']
     if pwd != pwdcheck:
-        return jsonify("notpwd")    #회원가입시에 패스워드 일치 오류
+        return jsonify({"type":"fail"})    #회원가입시에 패스워드 일치 오류
     if DB.signin(uid,pwd,pwdcheck):
-        return jsonify(True)        #회원가입 성공 -> 로그인 화면
+        return jsonify({"type":"success"})        #회원가입 성공 -> 로그인 화면
     else:
-        return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
+        return jsonify({"type":"dup"})       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
     
 @app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():
