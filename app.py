@@ -44,8 +44,8 @@ def logout():
 def signin():
     users = request.get_json()
     uid = users['id']
-    pwd = users['password']
-    pwdcheck = users['confirm']
+    pwd = users['pwd']
+    pwdcheck = users['pwdcheck']
     if pwd != pwdcheck:
         return jsonify({"type":"fail"})    #회원가입시에 패스워드 일치 오류
     if DB.signin(uid,pwd,pwdcheck):
