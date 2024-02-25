@@ -39,19 +39,25 @@ def logout():
     if "uid" in session:
         session.pop("uid")
         return None         #홈 화면으로 이동?
+
+@app.route("/dup" , methods = ["POST"])           
+def dup():
+    users = request.get_json()
+    uid = users['id']
+    if DB.signin_verification(uid):
+        return jsonify(False)
+    else :
+        return jsonify(True)
     
 @app.route("/signin", methods = ["POST"])   #회원가입 처리
 def signin():
     users = request.get_json()
     uid = users['id']
     pwd = users['pwd']
-    pwdcheck = users['pwdcheck']
-    if pwd != pwdcheck:
-        return jsonify({"type":"fail"})    #회원가입시에 패스워드 일치 오류
-    if DB.signin(uid,pwd,pwdcheck):
-        return jsonify({"type":"success"})        #회원가입 성공 -> 로그인 화면
+    if DB.signin(uid,pwd):
+        return jsonify(True)        #회원가입 성공 -> 로그인 화면
     else:
-        return jsonify({"type":"dup"})       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
+        return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
     
 @app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():

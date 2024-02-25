@@ -29,9 +29,7 @@ class DBmodule:
                 return False
         return True    
 
-    def signin(self, id, pwd, pwdcheck):
-        if pwd != pwdcheck:
-            return "notpwd"
+    def signin(self, id, pwd):
         information={
             "pwd":pwd
         }
