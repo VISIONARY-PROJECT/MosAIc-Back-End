@@ -46,8 +46,10 @@ def dup():
     uid = users['id']
     print(uid)   #for test
     if DB.signin_verification(uid):
+        print(False)
         return jsonify(False)
     else :
+        print(True)
         return jsonify(True)
     
 @app.route("/signin", methods = ["POST"])   #회원가입 처리
