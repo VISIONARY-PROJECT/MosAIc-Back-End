@@ -44,6 +44,7 @@ def logout():
 def dup():
     users = request.get_json()
     uid = users['id']
+    print(uid)   #for test
     if DB.signin_verification(uid):
         return jsonify(False)
     else :
