@@ -66,6 +66,7 @@ def signin():
 def upload():
     file = request.get_json()
     f = file['url']
+    print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))
     return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
