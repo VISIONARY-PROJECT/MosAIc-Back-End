@@ -64,8 +64,7 @@ def signin():
     
 @app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():
-    file = request.get_json()
-    f = file['url']
+    f = request.files.get('file')
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))
