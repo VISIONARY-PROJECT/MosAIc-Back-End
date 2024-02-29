@@ -9,8 +9,14 @@ app = Flask(__name__)
 CORS(app)
 CORS(app,resource={r'*':{'origins':'*'}})
 app.config["SECRET_KEY"] = "dasggasdgasd"
+
+app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_TYPE"] = "filesystem"
+
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = True
+session(app)
+
 DB=DBmodule()
 
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
