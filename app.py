@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request, flash, session, jsonify
+from flask import Flask, request, session, jsonify
 from DB_handler import DBmodule
 import uuid
 import face_model
@@ -9,13 +9,6 @@ app = Flask(__name__)
 CORS(app)
 CORS(app,resource={r'*':{'origins':'*'}})
 app.config["SECRET_KEY"] = "dasggasdgasd"
-
-app.config["SESSION_PERMANENT"] = True
-app.config["SESSION_TYPE"] = "filesystem"
-
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = True
-
 DB=DBmodule()
 
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
@@ -25,7 +18,7 @@ def index():
     else:
         return jsonify(False)
 
-@app.route("/api/login", methods = ["POST"])      #실제로 보이는 부분x
+@app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
 def login():
     users = request.get_json()
     uid = users['id']
@@ -47,7 +40,7 @@ def logout():
         session.pop("uid")
         return None         #홈 화면으로 이동?
 
-@app.route("/api/dup" , methods = ["POST"])           
+@app.route("/dup" , methods = ["POST"])           
 def dup():
     users = request.get_json()
     uid = users['id']
@@ -59,7 +52,7 @@ def dup():
         print(True)
         return jsonify(True)
     
-@app.route("/api/signin", methods = ["POST"])   #회원가입 처리
+@app.route("/signin", methods = ["POST"])   #회원가입 처리
 def signin():
     users = request.get_json()
     uid = users['id']
@@ -69,20 +62,12 @@ def signin():
     else:
         return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
     
-@app.route("/api/upload", methods = ["POST"])    #사진 업로드
+@app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():
     f = request.files.get('file')
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
-
-    uid = session.get("uid")
-    print(uid)
-    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
-    title = str(datetime.datetime.now())        #제목을 날짜로 저장
-    DB.write_post(title, uid)
-    DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)
-
     return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
 
 @app.route("/invert", methods = ["POST"])
