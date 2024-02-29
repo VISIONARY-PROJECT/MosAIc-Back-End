@@ -28,10 +28,10 @@ def blur_with_feathering(image, x, y, w, h, ksize=15, fade_width=5):
 
 
 def detect_face(img):
-    frontal_face_cascade = cv2.CascadeClassifier("./models/haarcascade_frontalface_default.xml")
-    profile_face_cascade = cv2.CascadeClassifier("./models/haarcascade_profileface.xml")
-    eye_cascade = cv2.CascadeClassifier("./models/haarcascade_eye.xml")
-    eyetree_cascade = cv2.CascadeClassifier("./models/haarcascade_eye_tree_eyeglasses.xml")
+    frontal_face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+    profile_face_cascade = cv2.CascadeClassifier("haarcascade_profileface.xml")
+    eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml")
+    eyetree_cascade = cv2.CascadeClassifier("haarcascade_eye_tree_eyeglasses.xml")
 
     image = cv2.imread(img) #이미지 불러오기
     image_gs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #이미지 그레이스케일로 처리하기
