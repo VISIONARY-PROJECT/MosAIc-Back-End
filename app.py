@@ -67,11 +67,14 @@ def upload():
     f = request.files.get('file')
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
-    f.save("static/img/{}.jpeg".format(photoid))
+    f.save("static/img/{}.jpeg".format(photoid))   
 
     uid = session.get("uid")
-    DB.upload_photo("static/img/{}.jpeg".format(photoid),uid) #테스트
-    
+    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
+    title = str(datetime.datetime.now())        #제목을 날짜로 저장
+    DB.write_post(title, uid)
+    DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)
+
     return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
 
 @app.route("/invert", methods = ["POST"])
@@ -95,7 +98,7 @@ def users_list(uid):
     return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
 
 @app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용(post_list의 각 인덱스별 0번이 pid 이중배열)
-def post(pid):
+def post(pid):              #pid는 post제목 즉 입력날짜를 의미한다. 위의 제목 list에서 받아오면됨
     post = DB.post_detail(pid)
     photourl = DB.get_photo_url(post["photo"],session["uid"])      #사진url을 받아오기
     return jsonify({"post" : post, "imgsrc" : photourl})
