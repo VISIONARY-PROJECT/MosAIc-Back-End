@@ -26,6 +26,9 @@ def login():
     print(uid,pwd)
     if DB.login(uid,pwd):
         session["uid"] = uid
+
+        print(session["uid"])
+
         print("True")
         print(jsonify(True))
         return jsonify(True)             #로그인 성공   ->업로드 화면
@@ -69,7 +72,7 @@ def upload():
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
 
-    uid = session.get("uid")
+    uid = session["uid"]
     print(uid)
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     title = str(datetime.datetime.now())        #제목을 날짜로 저장
