@@ -70,6 +70,7 @@ def upload():
     f.save("static/img/{}.jpeg".format(photoid))   
 
     uid = session.get("uid")
+    print(uid)
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     title = str(datetime.datetime.now())        #제목을 날짜로 저장
     DB.write_post(title, uid)
