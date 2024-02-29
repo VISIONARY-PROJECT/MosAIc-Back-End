@@ -15,7 +15,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = True
-session(app)
 
 DB=DBmodule()
 
