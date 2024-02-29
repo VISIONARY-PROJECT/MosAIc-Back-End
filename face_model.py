@@ -36,10 +36,10 @@ def detect_face(img):
     image = cv2.imread(img) #이미지 불러오기
     image_gs = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #이미지 그레이스케일로 처리하기
 
-    frontal_faces = frontal_face_cascade.detectMultiScale(image_gs, 1.2, 4)
+    frontal_faces = frontal_face_cascade.detectMultiScale(image_gs, 1.1, 4)
     print("정면 얼굴 감지된 사람:", str(len(frontal_faces)))
 
-    profile_faces = profile_face_cascade.detectMultiScale(image_gs, 1.2, 4)
+    profile_faces = profile_face_cascade.detectMultiScale(image_gs, 1.1, 4)
     print("옆면 얼굴 감지된 사람:", str(len(profile_faces)))
 
     eye = eye_cascade.detectMultiScale(image_gs, 1.2, 4)
