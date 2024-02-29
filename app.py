@@ -14,8 +14,10 @@ DB=DBmodule()
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
 def index():
     if "uid" in session:
+        print("Home True")
         return jsonify(True)
     else:
+        print("Home False")
         return jsonify(False)
 
 @app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
@@ -23,19 +25,13 @@ def login():
     users = request.get_json()
     uid = users['id']
     pwd = users['pw']
-    print(uid,pwd)
 
-    if "uid" in session:
-        return jsonify("세션있음")
-    
     if DB.login(uid,pwd):
         session["uid"] = uid
         print("True")
-        print(jsonify(True))
         return jsonify(True)             #로그인 성공   ->업로드 화면
     else:
         print("False")
-        print(jsonify(False))
         return jsonify(False)            #로그인 실패   ->다시 로그인 화면
     
 @app.route("/logout")           #로그아웃
@@ -78,15 +74,16 @@ def upload():
 def invert():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
-    uid = session.get("uid")
+    #uid = session.get("uid")
+    #print(uid)
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     if Dimage == None:                          #인식이 안된 경우 
-        DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)   #안된 경우도 DB에 올려야할까? , 인식안된 경우 다시 업로드 페이지로?
+        #DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)   #안된 경우도 DB에 올려야할까? , 인식안된 경우 다시 업로드 페이지로?
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
     else: 
         title = str(datetime.datetime.now())        #제목을 날짜로 저장
-        DB.write_post(title, uid)
-        DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
+        #DB.write_post(title, uid)
+        #DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
     
 @app.route("/users_list/<string:uid>")       #react로 어캐 받을지 고민
