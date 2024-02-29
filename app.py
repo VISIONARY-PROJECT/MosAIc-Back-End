@@ -14,14 +14,8 @@ DB=DBmodule()
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
 def index():
     if "uid" in session:
-
-        print(True)
-
         return jsonify(True)
     else:
-
-        print(False)
-        
         return jsonify(False)
 
 @app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
@@ -32,9 +26,6 @@ def login():
     print(uid,pwd)
     if DB.login(uid,pwd):
         session["uid"] = uid
-
-        print(session["uid"])
-
         print("True")
         print(jsonify(True))
         return jsonify(True)             #로그인 성공   ->업로드 화면
@@ -78,8 +69,8 @@ def upload():
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
 
-    uid = session["uid"]
-    print(uid)
+    uid = session.get("uid")
+    print(session["uid"])
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     title = str(datetime.datetime.now())        #제목을 날짜로 저장
     DB.write_post(title, uid)
