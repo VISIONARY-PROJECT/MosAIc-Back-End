@@ -24,6 +24,10 @@ def login():
     uid = users['id']
     pwd = users['pw']
     print(uid,pwd)
+
+    if "uid" in session:
+        return jsonify("세션있음")
+    
     if DB.login(uid,pwd):
         session["uid"] = uid
         print("True")
