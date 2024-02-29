@@ -18,7 +18,7 @@ def index():
     else:
         return jsonify(False)
 
-@app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
+@app.route("/api/login", methods = ["POST"])      #실제로 보이는 부분x
 def login():
     users = request.get_json()
     uid = users['id']
@@ -40,7 +40,7 @@ def logout():
         session.pop("uid")
         return None         #홈 화면으로 이동?
 
-@app.route("/dup" , methods = ["POST"])           
+@app.route("/api/dup" , methods = ["POST"])           
 def dup():
     users = request.get_json()
     uid = users['id']
@@ -52,7 +52,7 @@ def dup():
         print(True)
         return jsonify(True)
     
-@app.route("/signin", methods = ["POST"])   #회원가입 처리
+@app.route("/api/signin", methods = ["POST"])   #회원가입 처리
 def signin():
     users = request.get_json()
     uid = users['id']
@@ -62,7 +62,7 @@ def signin():
     else:
         return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
     
-@app.route("/upload", methods = ["POST"])    #사진 업로드
+@app.route("/api/upload", methods = ["POST"])    #사진 업로드
 def upload():
     f = request.files.get('file')
     print(f)
@@ -70,7 +70,7 @@ def upload():
     f.save("static/img/{}.jpeg".format(photoid))   
 
     uid = session.get("uid")
-    print(session["uid"])
+    print(uid)
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     title = str(datetime.datetime.now())        #제목을 날짜로 저장
     DB.write_post(title, uid)
