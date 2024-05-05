@@ -1,9 +1,9 @@
 {
-    "apiKey": "AIzaSyBGzm91CIkcb5dIJhMcx_MECQ783GabA2w",
-    "authDomain": "flask-firebase-community-68c8b.firebaseapp.com",
-    "databaseURL": "https://flask-firebase-community-68c8b-default-rtdb.firebaseio.com",
-    "projectId": "flask-firebase-community-68c8b",
-    "storageBucket": "flask-firebase-community-68c8b.appspot.com",
-    "messagingSenderId": "475255978697",
-    "appId": "1:475255978697:web:5415e5c5c80f7b673e2b18"
-  } 
+  "apiKey": "AIzaSyBMM9Vg7k8LSgvjIRzA4HNgHn6moGaLR6I",
+  "authDomain": "mosaic-server-71e61.firebaseapp.com",
+  "databaseURL": "https://mosaic-server-71e61-default-rtdb.firebaseio.com",
+  "projectId": "mosaic-server-71e61",
+  "storageBucket": "mosaic-server-71e61.appspot.com",
+  "messagingSenderId": "440295143541",
+  "appId": "1:440295143541:web:4382ebfc830f85f6ad203c"
+}
