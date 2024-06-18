@@ -80,16 +80,20 @@ def upload():
 def invert():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
-    #uid = session.get("uid")
-    #print(uid)
+
+    uid = session.get("uid")       #일단
+    print(uid)                     #일단
+
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
     if Dimage == None:                          #인식이 안된 경우 
-        #DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)   #안된 경우도 DB에 올려야할까? , 인식안된 경우 다시 업로드 페이지로?
+        DB.upload_photo("static/img/{}.jpeg".format(photoid),uid)   #일단 #안된 경우도 DB에 올려야할까? , 인식안된 경우 다시 업로드 페이지로?
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
     else: 
         title = str(datetime.datetime.now())        #제목을 날짜로 저장
-        #DB.write_post(title, uid)
-        #DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
+
+        DB.write_post(title, uid)               #일단
+        DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #일단#감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
+        
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
     
 @app.route("/users_list/<string:uid>")       #react로 어캐 받을지 고민
