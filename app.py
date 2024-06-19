@@ -14,8 +14,8 @@ app.config["SECRET_KEY"] = "dasggasdgasd"
 
 CORS(app, supports_credentials=True)
 
-#app.config["SESSION_COOKIE_SAMESITE"] = "None"
-#app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True
 
 DB=DBmodule()
 
