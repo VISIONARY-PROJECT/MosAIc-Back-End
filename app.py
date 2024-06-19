@@ -40,12 +40,11 @@ def login():
         print(session["uid"])   #test
         print("True")
 
-        response = jsonify({'success': True})
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response = jsonify(True)
         return response             #로그인 성공   ->업로드 화면
     else:
         print("False")
-        return jsonify({'success': False}), 401            #로그인 실패   ->다시 로그인 화면
+        return jsonify(False)            #로그인 실패   ->다시 로그인 화면
     
 @app.route("/logout")           #로그아웃
 def logout():
