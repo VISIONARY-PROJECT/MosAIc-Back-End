@@ -34,6 +34,9 @@ def login():
 
     if DB.login(uid,pwd):
         session["uid"] = uid
+
+        print(session["uid"])   #test
+
         print("True")
         return jsonify(True)             #로그인 성공   ->업로드 화면
     else:
