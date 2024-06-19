@@ -74,6 +74,9 @@ def signin():
 @app.route("/upload", methods = ["POST"])    #사진 업로드
 def upload():
     f = request.files.get('file')
+
+    print("checkupload")   #테스팅
+
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
@@ -85,6 +88,7 @@ def invert():
     photoid = id['photo_id']
 
     uid = session.get("uid")       #일단
+    print("invert")
     print(uid)                     #일단
 
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
@@ -96,7 +100,7 @@ def invert():
 
         DB.write_post(title, uid)               #일단
         DB.upload_photo("static/img/{}.jpeg".format(Dimage),uid)    #일단#감지된 경우 DB에 업로드 처리하기 / 파일 넘길때 아예 사이트 통으로 넘기기?
-        
+        print("invert2")
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
     
 @app.route("/users_list/<string:uid>")       #react로 어캐 받을지 고민
