@@ -12,8 +12,10 @@ CORS(app)
 CORS(app,resource={r'*':{'origins':'*'}})
 app.config["SECRET_KEY"] = "dasggasdgasd"
 
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = True
+CORS(app, supports_credentials=True)
+
+#app.config["SESSION_COOKIE_SAMESITE"] = "None"
+#app.config["SESSION_COOKIE_SECURE"] = True
 
 DB=DBmodule()
 
@@ -36,12 +38,14 @@ def login():
         session["uid"] = uid
 
         print(session["uid"])   #test
-
         print("True")
-        return jsonify(True)             #로그인 성공   ->업로드 화면
+
+        response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response             #로그인 성공   ->업로드 화면
     else:
         print("False")
-        return jsonify(False)            #로그인 실패   ->다시 로그인 화면
+        return jsonify({'success': False}), 401            #로그인 실패   ->다시 로그인 화면
     
 @app.route("/logout")           #로그아웃
 def logout():
