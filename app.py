@@ -76,6 +76,7 @@ def upload():
     f = request.files.get('file')
 
     print("checkupload")   #테스팅
+    print(session["uid"])  #테스트
 
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
