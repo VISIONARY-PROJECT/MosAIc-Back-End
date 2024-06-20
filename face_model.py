@@ -58,6 +58,9 @@ def detect_face(img):
     total.extend(eye)
     total.extend(eyetree)
 
+    print(total)            #테스트용 임시
+    print(frontal_faces)
+
     if len(total) > 0:
         for (x, y, w, h) in total:
             blur_with_feathering(image, x, y, w, h, ksize=ksize, fade_width=fade_width)
