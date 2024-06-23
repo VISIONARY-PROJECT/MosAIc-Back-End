@@ -119,9 +119,14 @@ def delete_photo():
     if "uid" in session:
         uid = session.get("uid")
         deletephoto = request.get_json()
-        deletephoto_id = deletephoto['photoid']
+        deletephoto_id = deletephoto['photoid'] 
 
-        
+        DB.delete(uid,deletephoto_id)
+        return jsonify(True)
+    else:
+        return jsonify(False)
+
+
 
 @app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용(post_list의 각 인덱스별 0번이 pid 이중배열)
 def post(pid):              #pid는 post제목 즉 입력날짜를 의미한다. 위의 제목 list에서 받아오면됨

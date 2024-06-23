@@ -48,11 +48,6 @@ class DBmodule:
             "photo":"static/img/{}.jpeg".format(Dimage)
         }
         self.db.child("posts").child(pid).set(information)
-
-        users_post =self.db.child("posts").get().val()
-        for post in users_post.items():
-            print(post)
-
     
     def post_list(self):
         post_lists = self.db.child("posts").get().val()
@@ -77,9 +72,8 @@ class DBmodule:
         posts = self.db.child("posts").get().val()
         for post in posts.items():
             if post[1]["photo"]==photoid:
-                self.db.child("posts").child("").remove()
+                self.db.child("posts").child(post[0]).remove()
                 return
-
         
     def get_photo_url(self, purl, uid):
         print(self.storage.child(purl).get_url(uid))
