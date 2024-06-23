@@ -63,11 +63,20 @@ class DBmodule:
         users_post =self.db.child("posts").get().val()
         try:
             for post in users_post.items():
+                print(post) # for testing
                 if post[1]["uid"]==uid:
                     post_list.append(post[1]["photo"])
             return post_list
         except:
             return post_list
+        
+    def delete(self, uid, photoid):
+        posts = self.db.child("posts").get().val()
+        for post in posts.items():
+            if post[1]["photo"]==photoid:
+                self.db.child("posts").child("").remove()
+                return
+
         
     def get_photo_url(self, purl, uid):
         print(self.storage.child(purl).get_url(uid))

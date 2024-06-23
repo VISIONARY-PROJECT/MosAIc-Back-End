@@ -113,6 +113,15 @@ def users_list():
         return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
     else :
         return jsonify(False)  #로그인 안된 상태로 mypage로 가면 다시 로그인 상태로 바꾼다.
+    
+@app.route("/delete_photo")
+def delete_photo():
+    if "uid" in session:
+        uid = session.get("uid")
+        deletephoto = request.get_json()
+        deletephoto_id = deletephoto['photoid']
+
+        
 
 @app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용(post_list의 각 인덱스별 0번이 pid 이중배열)
 def post(pid):              #pid는 post제목 즉 입력날짜를 의미한다. 위의 제목 list에서 받아오면됨
