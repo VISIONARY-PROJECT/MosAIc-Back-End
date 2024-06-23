@@ -15,7 +15,7 @@ def blur_with_feathering(image, x, y, w, h, ksize=15, fade_width=5):
         
         # 가우시안 블러로 마스크의 경계 부분을 부드럽게 만들기
         mask = cv2.GaussianBlur(mask, (ksize, ksize), 0)
-        
+            
         # 알파 블렌딩을 위한 알파 마스크 계산
         alpha_mask = mask.astype(float) / 255
         
@@ -57,9 +57,6 @@ def detect_face(img):
     total.extend(profile_faces)
     total.extend(eye)
     total.extend(eyetree)
-
-    print(total)            #테스트용 임시
-    print(frontal_faces)
 
     if len(total) > 0:
         for (x, y, w, h) in total:
