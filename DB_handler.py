@@ -45,7 +45,7 @@ class DBmodule:
         information ={
             "title":title,
             "uid":uid,
-            "photo":Dimage
+            "photo":"static/img/{}.jpeg".format(Dimage)
         }
         self.db.child("posts").child(pid).set(information)
 
@@ -64,7 +64,7 @@ class DBmodule:
         try:
             for post in users_post.items():
                 if post[1]["uid"]==uid:
-                    post_list.append(post)
+                    post_list.append(post[1]["photo"])
             return post_list
         except:
             return post_list
