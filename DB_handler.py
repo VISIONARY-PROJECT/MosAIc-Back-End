@@ -64,7 +64,7 @@ class DBmodule:
             for post in users_post.items():
                 print(post)
                 if post[1]["uid"]==uid:
-                    post_list.append(post[1]["photo"])
+                    post_list.append("https://port-0-back-end-am952nlsys9dvi.sel5.cloudtype.app/{}".format(post[1]["photo"]))
             return post_list
         except:
             return post_list
