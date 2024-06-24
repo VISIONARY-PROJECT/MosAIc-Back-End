@@ -101,14 +101,36 @@ def invert():
         title = str(datetime.datetime.now())        #제목을 날짜로 저장
 
         DB.write_post(title, uid, Dimage)               #일단
-        print("invert2")
+        print("invert")
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
+    
+#추가할 부분
+@app.route("/others", methods = ["POST"])
+def invert():
+    id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
+    photoid = id['photo_id']
+
+    uid = session.get("uid")       
+    print("다른모델")
+    print(uid)                     
+
+    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
+    if Dimage == None:                          #인식이 안된 경우 
+        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
+    else: 
+        title = str(datetime.datetime.now())        #제목을 날짜로 저장
+
+        DB.write_post(title, uid, Dimage)               #일단
+        print("다른모델")
+        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
+    #추가할 부분
     
 @app.route("/users_list")       #react로 어캐 받을지 고민
 def users_list():
     if "uid" in session:
         uid = session.get("uid")
         u_post = DB.get_user(uid)
+        print(u_post)
         return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
     else :
         return jsonify(False)  #로그인 안된 상태로 mypage로 가면 다시 로그인 상태로 바꾼다.
