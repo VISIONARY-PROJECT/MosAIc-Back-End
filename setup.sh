@@ -1,3 +1,4 @@
 # Update package list and install Tesseract OCR
-sudo apt-get update
-sudo apt-get install -y tesseract-ocr
+su -
+apt-get update
+apt-get install -y tesseract-ocr
