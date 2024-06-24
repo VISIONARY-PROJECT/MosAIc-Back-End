@@ -136,7 +136,7 @@ def license_plate():
     print("license_plate")
     print(uid)                     
 
-    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
+    Dimage = license_plate.detect_license("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
     if Dimage == None:                          #인식이 안된 경우 
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
     else: 
