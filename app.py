@@ -106,7 +106,7 @@ def invert():
     
 #추가할 부분
 @app.route("/others", methods = ["POST"])
-def invert():
+def others():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
 
