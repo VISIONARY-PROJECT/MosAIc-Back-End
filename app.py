@@ -7,9 +7,8 @@ import datetime
 from flask_cors import CORS
 import subprocess
 
-setup_script = './setup.sh'
 try:
-    subprocess.run([setup_script], check=True)
+    subprocess.run(['setup.sh'], check=True)
     print("setup.sh 실행 완료")
 except subprocess.CalledProcessError as e:
     print(f"setup.sh 실행 중 오류 발생: {e}")
