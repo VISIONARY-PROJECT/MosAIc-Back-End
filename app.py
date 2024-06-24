@@ -6,16 +6,15 @@ import datetime
 from flask_cors import CORS
 
 
-
 app = Flask(__name__)
-CORS(app)
-CORS(app,resource={r'*':{'origins':'*'}})
 app.config["SECRET_KEY"] = "dasggasdgasd"
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True
+
 
 CORS(app, supports_credentials=True)
 
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = True
+
 
 DB=DBmodule()
 
