@@ -127,15 +127,15 @@ def others():
     
 @app.route("/users_list")       #react로 어캐 받을지 고민
 def users_list():
-    #if "uid" in session:
-    uid = session.get("uid")
-    print("lists")
-    print(uid)
-    u_post = DB.get_user(uid)
-    print(u_post)
-    return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
-    #else :
-        #return jsonify(False)  #로그인 안된 상태로 mypage로 가면 다시 로그인 상태로 바꾼다.
+    if "uid" in session:
+        uid = session.get("uid")
+        print("lists")
+        print(uid)
+        u_post = DB.get_user(uid)
+        print(u_post)
+        return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
+    else :
+        return jsonify(False)  #로그인 안된 상태로 mypage로 가면 다시 로그인 상태로 바꾼다.
     
 @app.route("/delete_photo")
 def delete_photo():
