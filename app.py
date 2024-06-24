@@ -12,7 +12,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = True
 
 
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["https://port-0-back-end-am952nlsys9dvi.sel5.cloudtype.app"])
 
 
 
