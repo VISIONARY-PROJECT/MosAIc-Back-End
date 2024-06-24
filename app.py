@@ -2,6 +2,7 @@ from flask import Flask, request, session, jsonify
 from DB_handler import DBmodule
 import uuid
 import face_model
+import address_model
 import datetime
 from flask_cors import CORS
 
@@ -85,13 +86,14 @@ def upload():
     f.save("static/img/{}.jpeg".format(photoid))   
     return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
 
-@app.route("/invert", methods = ["POST"])
+#얼굴 모델
+@app.route("/face", methods = ["POST"])
 def invert():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
 
     uid = session.get("uid")       #일단
-    print("invert")
+    print("face1")
     print(uid)                     #일단
 
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
@@ -101,17 +103,38 @@ def invert():
         title = str(datetime.datetime.now())        #제목을 날짜로 저장
 
         DB.write_post(title, uid, Dimage)               #일단
-        print("invert")
+        print("face2")
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
     
-#추가할 부분
-@app.route("/others", methods = ["POST"])
-def others():
+#주소 모델
+@app.route("/address", methods = ["POST"])
+def address():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
 
     uid = session.get("uid")       
-    print("다른모델")
+    print("address")
+    print(uid)                     
+
+    Dimage = address_model.detect_address("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
+    if Dimage == None:                          #인식이 안된 경우 
+        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
+    else: 
+        title = str(datetime.datetime.now())        #제목을 날짜로 저장
+
+        DB.write_post(title, uid, Dimage)               #일단
+        print("address2")
+        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
+    
+
+#번호판 모델
+@app.route("/license_plate", methods = ["POST"])
+def address():
+    id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
+    photoid = id['photo_id']
+
+    uid = session.get("uid")       
+    print("license_plate")
     print(uid)                     
 
     Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
@@ -121,9 +144,9 @@ def others():
         title = str(datetime.datetime.now())        #제목을 날짜로 저장
 
         DB.write_post(title, uid, Dimage)               #일단
-        print("다른모델")
+        print("license_plate2")
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
-    #추가할 부분
+    
     
 @app.route("/users_list")       #react로 어캐 받을지 고민
 def users_list():
