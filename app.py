@@ -129,7 +129,7 @@ def address():
 
 #번호판 모델
 @app.route("/license_plate", methods = ["POST"])
-def address():
+def license_plate():
     id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
     photoid = id['photo_id']
 
