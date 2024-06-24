@@ -129,6 +129,8 @@ def others():
 def users_list():
     if "uid" in session:
         uid = session.get("uid")
+        print("lists")
+        print(uid)
         u_post = DB.get_user(uid)
         print(u_post)
         return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기

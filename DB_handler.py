@@ -62,6 +62,7 @@ class DBmodule:
         users_post =self.db.child("posts").get().val()
         try:
             for post in users_post.items():
+                print(post)
                 if post[1]["uid"]==uid:
                     post_list.append(post[1]["photo"])
             return post_list
