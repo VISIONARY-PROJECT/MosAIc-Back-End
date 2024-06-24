@@ -5,13 +5,6 @@ import face_model
 import address_model
 import datetime
 from flask_cors import CORS
-import subprocess
-
-try:
-    subprocess.run(['setup.sh'], check=True)
-    print("setup.sh 실행 완료")
-except subprocess.CalledProcessError as e:
-    print(f"setup.sh 실행 중 오류 발생: {e}")
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "dasggasdgasd"
