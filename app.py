@@ -125,8 +125,9 @@ def others():
         return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
     #추가할 부분
     
-@app.route("/users_list", methods = ["POST"])       #react로 어캐 받을지 고민
+@app.route("/users_list")       #react로 어캐 받을지 고민
 def users_list():
+    print("list")
     if "uid" in session:
         uid = session.get("uid")
         print("lists")
