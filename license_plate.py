@@ -86,3 +86,4 @@ def detect_license(img):
     # 최종 이미지 저장
     id = str(uuid.uuid4())[:12]
     cv2.imwrite("static/img/{}.jpeg".format(id), img_file)
+    return id
