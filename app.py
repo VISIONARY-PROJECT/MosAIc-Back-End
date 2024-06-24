@@ -3,6 +3,7 @@ from DB_handler import DBmodule
 import uuid
 import face_model
 import address_model
+import license_plate
 import datetime
 from flask_cors import CORS
 
