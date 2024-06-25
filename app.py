@@ -4,7 +4,6 @@ import uuid
 import face_model
 import address_model
 import license_model
-import number_create
 import datetime
 from flask_cors import CORS
 
@@ -136,8 +135,7 @@ def license_plate():
 
     uid = session.get("uid")       
     print("license_plate")
-    print(uid)       
-    number_create.create()         
+    print(uid)           
 
     Dimage = license_model.detect_license("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
     if Dimage == None:                          #인식이 안된 경우 
