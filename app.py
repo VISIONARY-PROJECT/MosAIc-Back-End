@@ -1,7 +1,7 @@
 from flask import Flask, request, session, jsonify
 from DB_handler import DBmodule
 import uuid
-import face_model
+import text_model
 import address_model
 import license_model
 import datetime
@@ -21,166 +21,53 @@ DB=DBmodule()
 
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
 def index():
-    if "uid" in session:
-        print("Home True")
-        return jsonify(True)
-    else:
-        print("Home False")
-        return jsonify(False)
+    return True
 
-@app.route("/login", methods = ["POST"])      #실제로 보이는 부분x
-def login():
-    users = request.get_json()
-    uid = users['id']
-    pwd = users['pw']
-
-    if DB.login(uid,pwd):
-        session["uid"] = uid
-
-        print(session["uid"])   #test
-        print("True")
-
-        response = jsonify(True)
-        return response             #로그인 성공   ->업로드 화면
-    else:
-        print("False")
-        return jsonify(False)            #로그인 실패   ->다시 로그인 화면
-    
-@app.route("/logout")           #로그아웃
-def logout():
-    if "uid" in session:
-        session.pop("uid")
-        return None         #홈 화면으로 이동?
-
-@app.route("/dup" , methods = ["POST"])           
-def dup():
-    users = request.get_json()
-    uid = users['id']
-    print(uid)   #for test
-    if DB.signin_verification(uid):
-        print(False)
-        return jsonify(False)
-    else :
-        print(True)
-        return jsonify(True)
-    
-@app.route("/signin", methods = ["POST"])   #회원가입 처리
-def signin():
-    users = request.get_json()
-    uid = users['id']
-    pwd = users['pwd']
-    if DB.signin(uid,pwd):
-        return jsonify(True)        #회원가입 성공 -> 로그인 화면
-    else:
-        return jsonify(False)       #회원가입 실패 -> 다시 회원가입 화면(무슨 이유로 실패인지 전달 1. 비밀번호 재입력 오류, 이미 쓰는)
-    
-@app.route("/upload", methods = ["POST"])    #사진 업로드
+@app.route("/model", methods = ["POST"])    #사진 업로드
 def upload():
     f = request.files.get('file')
-
     
     print("checkupload")   #테스팅
-
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
-    return jsonify({"photo_id" : photoid})            #저장한 사진의 url을 프론트에 전달
 
-#얼굴 모델
-@app.route("/face", methods = ["POST"])
-def invert():
-    id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
-    photoid = id['photo_id']
-
-    uid = session.get("uid")       #일단
-    print("face1")
-    print(uid)                     #일단
-
-    Dimage = face_model.detect_face("static/img/{}.jpeg".format(photoid))
-    if Dimage == None:                          #인식이 안된 경우 
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
+    Dtext = text_model.summarize_text("static/img/{}.jpeg".format(photoid))
+    
+    if Dtext == None:                         #인식이 안된 경우 
+        print("no text")
+        return jsonify({"photo_id": photoid, "detect" : False, "text" : Dtext})
     else: 
-        title = str(datetime.datetime.now())        #제목을 날짜로 저장
-
-        DB.write_post(title, uid, Dimage)               #일단
-        print("face2")
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
+        print("yes text")
+        DB.write_post(photoid, Dtext)  
+        return jsonify({"photo_id": photoid, "detect" : True, "text": Dtext})
     
-#주소 모델
-@app.route("/address", methods = ["POST"])
-def address():
-    id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
-    photoid = id['photo_id']
+@app.route("/category", methods = ["POST"])
+def category():
+    info = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
+    photoid = info['photo_id']
+    category_name = info['category']
 
-    uid = session.get("uid")       
-    print("address")
-    print(uid)                     
+    DB.update_category(photoid, category_name)
 
-    Dimage = address_model.detect_address("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
-    if Dimage == None:                          #인식이 안된 경우 
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
-    else: 
-        title = str(datetime.datetime.now())        #제목을 날짜로 저장
+@app.route("/text_list", methods = ["POST"])       #사용자의 해당 카테고리를 가지는 사진 목록을 보여줌.
+def text_list():
+    info = request.get_json()       #카테고리 정보를 받을 것
+    category_name = info['category']
+        
+    c_post = DB.get_category(category_name)       #해당 카테고리의 이미지 소스들
 
-        DB.write_post(title, uid, Dimage)               #일단
-        print("address2")
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
-    
+    return jsonify({"post_list" :c_post, "category" : category_name})     #none이면 아직 목록이 없는 상태, category를 통해 어떤 카테고리의 리스트인지표기
 
-#번호판 모델
-@app.route("/license_plate", methods = ["POST"])
-def license_plate():
-    id = request.get_json()                      #저장한 사진의 url을 프론트에서 다시 받기
-    photoid = id['photo_id']
+@app.route("/detail",methods = ["POST"])
+def detail():
+    info = request.get_json()
+    photoid = info['photoid']
 
-    uid = session.get("uid")       
-    print("license_plate")
-    print(uid)           
+    detail_info = DB.get_detail(photoid)
+    print(detail_info)
 
-    Dimage = license_model.detect_license("static/img/{}.jpeg".format(photoid)) # 다른 모델로 수정
-    if Dimage == None:                          #인식이 안된 경우 
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(photoid) , "detect" : False})
-    else: 
-        title = str(datetime.datetime.now())        #제목을 날짜로 저장
-
-        DB.write_post(title, uid, Dimage)               #일단
-        print("license_plate2")
-        return jsonify({"imgsrc" : "static/img/{}.jpeg".format(Dimage), "detect" : True})
-    
-    
-@app.route("/users_list")       #react로 어캐 받을지 고민
-def users_list():
-    if "uid" in session:
-        uid = session.get("uid")
-        print("lists")
-        print(uid)
-        u_post = DB.get_user(uid)
-        print(u_post)
-        return jsonify({"post_list" :u_post, "uid" : uid})     #none이면 아직 목록이 없는 상태, uid를 통해 누구의 리스트인지표기
-    else :
-        return jsonify(False)  #로그인 안된 상태로 mypage로 가면 다시 로그인 상태로 바꾼다.
-    
-@app.route("/delete_photo")
-def delete_photo():
-    if "uid" in session:
-        uid = session.get("uid")
-        deletephoto = request.get_json()
-        deletephoto_id = deletephoto['photoid'] 
-
-        DB.delete(uid,deletephoto_id)
-        return jsonify(True)
-    else:
-        return jsonify(False)
-
-
-
-@app.route("/post/<string:pid>")         #목록 내의 각 포스트의 세부내용(post_list의 각 인덱스별 0번이 pid 이중배열)
-def post(pid):              #pid는 post제목 즉 입력날짜를 의미한다. 위의 제목 list에서 받아오면됨
-    post = DB.post_detail(pid)
-    photourl = DB.get_photo_url(post["photo"],session["uid"])      #사진url을 받아오기
-    return jsonify({"post" : post, "imgsrc" : photourl})
-
-
+    return jsonify({"text" : detail_info["Dtext"]})
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0")

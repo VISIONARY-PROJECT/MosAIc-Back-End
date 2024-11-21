@@ -38,44 +38,37 @@ class DBmodule:
             return True
         else:
             return False
-
-    
-    def write_post(self, title, uid, Dimage):
-        pid = str(uuid.uuid4())[:12]             #post의 아이디
+        
+    def write_post(self, photoid, Dtext):
         information ={
-            "title":title,
-            "uid":uid,
-            "photo":"static/img/{}.jpeg".format(Dimage)
+            "photo":"static/img/{}.jpeg".format(photoid),
+            "text":Dtext,
+            "category" : None
         }
-        self.db.child("posts").child(pid).set(information)
-    
-    def post_list(self):
-        post_lists = self.db.child("posts").get().val()
-        return post_lists
-    
-    def post_detail(self, pid):
-        post = self.db.child("posts").get().val()[pid]
-        return post
+        self.db.child("posts").child(photoid).set(information)
 
-    def get_user(self, uid):
+    def update_category(self, photoid, category):
+        self.db.child("posts").child(photoid).update({"category":category})
+
+    def get_category(self, category):
         post_list =[]
         users_post =self.db.child("posts").get().val()
         try:
             for post in users_post.items():
-                print(post)
-                if post[1]["uid"]==uid:
-                    post_list.append("https://port-0-back-end-am952nlsys9dvi.sel5.cloudtype.app/{}".format(post[1]["photo"]))
+                if post[1]["category"]==category:
+                    print(post[0])  #post[0]가 photoid?
+                    post_list.append(post[0])
             return post_list
         except:
             return post_list
         
-    def delete(self, uid, photoid):
-        posts = self.db.child("posts").get().val()
-        for post in posts.items():
-            if post[1]["photo"]==photoid:
-                self.db.child("posts").child(post[0]).remove()
-                return
-        
-    def get_photo_url(self, purl, uid):
-        print(self.storage.child(purl).get_url(uid))
-        return self.storage.child(purl).get_url(uid)
+    def get_detail(self, photoid):
+        posts =self.db.child("posts").get().val()
+        try: 
+            for post in posts.items():
+                if post[0] == photoid:
+                    print(post[0])
+                    return(post[1])
+        except:
+            return None
+                    
