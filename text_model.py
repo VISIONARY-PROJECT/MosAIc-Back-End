@@ -1,9 +1,9 @@
-import torch
 import random
 import numpy as np
 import cv2
-from PIL import ImageFont, ImageDraw, Image
 import app
+from PIL import ImageFont, ImageDraw, Image
+
 
 def text_out(path):
     

@@ -3,8 +3,8 @@ from DB_handler import DBmodule
 import text_model
 import uuid
 import datetime
-import torch
 from flask_cors import CORS
+import torch
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "dasggasdgasd"
@@ -13,7 +13,6 @@ app.config["SESSION_COOKIE_SECURE"] = True
 
 
 CORS(app, supports_credentials=True)
-
 
 model_path = "korean.pth"
 text_model = torch.load(model_path)
