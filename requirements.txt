@@ -34,7 +34,6 @@ pyparsing==3.1.2
 Pyrebase4==4.8.0
 pytesseract==0.3.13
 python-jwt==4.1.0
-pytorch==1.7.1
 PyYAML==6.0.2
 regex==2024.7.24
 requests==2.32.3
