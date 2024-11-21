@@ -6,6 +6,7 @@ from PIL import ImageFont, ImageDraw, Image
 import app
 
 def text_out(path):
+    
     reader = app.text_model.Reader(['ko'], gpu = False)
     result = reader.readtext(path)
 
