@@ -4,9 +4,10 @@ import numpy as np
 import cv2
 from PIL import ImageFont, ImageDraw, Image
 
-model_path = "korean.pth"
-text_model = torch.load(model_path)
+
 def text_out(path):
+    model_path = "korean.pth"
+    text_model = torch.load(model_path)
     reader = text_model.Reader(['ko'], gpu = False)
     result = reader.readtext(path)
 
