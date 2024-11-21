@@ -3,10 +3,11 @@ import random
 import numpy as np
 import cv2
 from PIL import ImageFont, ImageDraw, Image
-import app
 
+model_path = "korean.pth"
+text_model = torch.load(model_path)
 def text_out(path):
-    reader = app.text_model.Reader(['ko'], gpu = False)
+    reader = text_model.Reader(['ko'], gpu = False)
     result = reader.readtext(path)
 
     texts = [i[1] for i in result]

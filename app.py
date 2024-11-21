@@ -3,7 +3,6 @@ from DB_handler import DBmodule
 import text_model
 import uuid
 import datetime
-import torch
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -14,9 +13,6 @@ app.config["SESSION_COOKIE_SECURE"] = True
 
 CORS(app, supports_credentials=True)
 
-
-model_path = "korean.pth"
-text_model = torch.load(model_path)
 DB=DBmodule()
 
 @app.route("/")                     #홈화면 버튼에 대한 처리(로그인o : 업로드 화면, 로그인x : 로그인 화면으로)
