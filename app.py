@@ -24,13 +24,17 @@ def index():
 @app.route("/model", methods = ["POST"])    #사진 업로드
 def upload():
     f = request.files.get('file')
+    print("프론트 통과!")
     
     print("checkupload")   #테스팅
     print(f)
     photoid = str(uuid.uuid4())[:12]                   #서버에는 임의의 이름으로 받은 사진 저장
     f.save("static/img/{}.jpeg".format(photoid))   
 
+    print("백엔드 통과!")
     Dtext = text_model.summarize_text("static/img/{}.jpeg".format(photoid))
+    print("AI 통과!")
+
     
     if Dtext == None:                         #인식이 안된 경우 
         print("no text")
