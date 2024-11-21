@@ -32,7 +32,7 @@ def upload():
     f.save("static/img/{}.jpeg".format(photoid))   
 
     print("백엔드 통과!")
-    Dtext = text_model.summarize_text("static/img/{}.jpeg".format(photoid))
+    Dtext = text_model.text_out("static/img/{}.jpeg".format(photoid))
     print("AI 통과!")
 
     
