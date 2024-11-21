@@ -1,9 +1,7 @@
 from flask import Flask, request, session, jsonify
 from DB_handler import DBmodule
-import uuid
 import text_model
-import address_model
-import license_model
+import uuid
 import datetime
 from flask_cors import CORS
 
