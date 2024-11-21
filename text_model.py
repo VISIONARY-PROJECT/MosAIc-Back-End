@@ -1,11 +1,12 @@
-import easyocr
+import torch
 import random
 import numpy as np
 import cv2
 from PIL import ImageFont, ImageDraw, Image
+import app
 
 def text_out(path):
-    reader = easyocr.Reader(['ko','en'], gpu = False)
+    reader = app.text_model.Reader(['ko'], gpu = False)
     result = reader.readtext(path)
 
     texts = [i[1] for i in result]
